@@ -54,6 +54,7 @@ const userSchema = new mongoose.Schema(
 
   mobileNo: {
     type: String,
+    required: false,
     match: [/^[6-9][0-9]{9}$/, "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9"]
   },
   profileImage: {
