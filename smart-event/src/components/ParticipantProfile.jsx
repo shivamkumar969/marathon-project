@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { getCourses } from "../services/courseApi";
 import Toast from "./Toast";
+import config from "../config";
 
 function ParticipantProfile() {
   const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user") || "{}"));
@@ -126,7 +127,7 @@ function ParticipantProfile() {
         formData.append("profileImage", profileImage);
       }
 
-      const res = await axios.put(`http://localhost:5000/api/users/profile/${user._id}`, formData, {
+      const res = await axios.put(`${config.API_BASE_URL}/api/users/profile/${user._id}`, formData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data"
@@ -161,7 +162,7 @@ function ParticipantProfile() {
         <div className="relative group">
           {user.profileImage ? (
             <img 
-              src={`http://localhost:5000${user.profileImage}`} 
+              src={config.getImageUrl(user.profileImage)} 
               alt="Profile" 
               className="w-24 h-24 rounded-2xl object-cover shadow-lg shadow-fuchsia-500/20 border-2 border-fuchsia-500/30"
             />

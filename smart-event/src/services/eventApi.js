@@ -1,6 +1,7 @@
 import axios from "axios";
+import config from "../config";
 
-const API = "http://localhost:5000/api/events";
+const API = `${config.API_BASE_URL}/api/events`;
 
 export const createEvent = (data) => axios.post(API, data);
 

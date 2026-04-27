@@ -1,7 +1,7 @@
 import axios from "axios";
+import config from "../config";
 
-const API =
-"http://localhost:5000/api/registrations";
+const API = `${config.API_BASE_URL}/api/registrations`;
 
 export const getMyRegistrations =
 (userId) =>

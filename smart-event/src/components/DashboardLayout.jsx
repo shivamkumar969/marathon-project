@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import config from "../config";
 
 function DashboardLayout({ children, role }) {
   const user = JSON.parse(sessionStorage.getItem("user") || "{}");
@@ -132,7 +133,7 @@ function DashboardLayout({ children, role }) {
             <div className="flex items-center gap-3 bg-[#0f0a19] py-1.5 px-3 rounded-full border border-fuchsia-900/30 cursor-pointer hover:border-fuchsia-500/50 transition-colors">
               {user.profileImage ? (
                 <img 
-                  src={`http://localhost:5000${user.profileImage}`} 
+                  src={config.getImageUrl(user.profileImage)} 
                   alt="Avatar" 
                   className="w-8 h-8 rounded-full object-cover border border-fuchsia-500/30"
                 />

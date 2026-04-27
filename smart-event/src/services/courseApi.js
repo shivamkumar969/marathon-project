@@ -1,6 +1,7 @@
 import axios from "axios";
+import config from "../config";
 
-const API = "http://localhost:5000/api/courses";
+const API = `${config.API_BASE_URL}/api/courses`;
 
 export const getCourses = () => axios.get(API);
 export const createCourse = (data) => axios.post(API, data);

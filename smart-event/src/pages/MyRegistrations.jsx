@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMyRegistrations, withdrawRegistration } from "../services/registrationApi";
 import axios from "axios";
+import config from "../config";
 
 function MyRegistrations() {
   const [data, setData] = useState([]);
@@ -38,7 +39,7 @@ function MyRegistrations() {
     setUpdatingSkills(true);
     try {
       const skillsArray = skillsInput.split(",").map(s => s.trim()).filter(s => s !== "");
-      const res = await axios.put(`http://localhost:5000/api/matchmaker/skills/${user._id}`, {
+      const res = await axios.put(`${config.API_BASE_URL}/api/matchmaker/skills/${user._id}`, {
         skills: skillsArray
       });
       const updatedUser = { ...user, skills: res.data.skills };

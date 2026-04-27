@@ -1,7 +1,7 @@
 import axios from "axios";
+import config from "../config";
 
-const API =
-"http://localhost:5000/api/winners";
+const API = `${config.API_BASE_URL}/api/winners`;
 
 export const markWinner = (data) =>
 axios.post(API, data);
