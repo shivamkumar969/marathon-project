@@ -6,8 +6,8 @@ const createTransporter = () => {
     port: process.env.MAIL_PORT || 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.MAIL_USERNAME || 'shivamji101202@gmail.com',
-      pass: process.env.MAIL_PASSWORD || 'vezp ahya xxpo trgo',
+      user: process.env.MAIL_USERNAME,
+      pass: process.env.MAIL_PASSWORD.replace(/\s+/g, ''), // Remove any spaces
     },
   });
 };
@@ -19,7 +19,7 @@ const sendProvisioningEmail = async (userEmail, userName, userRole, plainPasswor
     const roleName = userRole === 'admin' ? 'Master Admin' : 'Coordinator';
 
     const mailOptions = {
-      from: `"SMART Event Manager" <${process.env.MAIL_DEFAULT_SENDER || 'shivamji101202@gmail.com'}>`,
+      from: `"SMART Event Manager" <${process.env.MAIL_DEFAULT_SENDER}>`,
       to: userEmail,
       subject: `Welcome to SMART Event Manager - Your ${roleName} Account`,
       html: `
@@ -36,7 +36,7 @@ const sendProvisioningEmail = async (userEmail, userName, userRole, plainPasswor
           <p style="font-size: 14px; color: #666;">Please login to your dashboard to manage your assigned events. We highly recommend changing your password after your first login for security purposes.</p>
           
           <div style="text-align: center; margin-top: 30px;">
-            <a href="http://localhost:5173/login" style="background-color: #6a1b9a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Access Dashboard</a>
+            <a href="https://smart-event-shivam.vercel.app/login" style="background-color: #6a1b9a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Access Dashboard</a>
           </div>
 
           <hr style="border: 0; border-top: 1px solid #ddd; margin-top: 40px; margin-bottom: 20px;" />
@@ -115,7 +115,7 @@ const sendPasswordResetEmail = async (userEmail, userName, newPassword) => {
           <p style="font-size: 14px; color: #666;">You can now log in using this new password. We highly recommend changing it immediately after logging in.</p>
           
           <div style="text-align: center; margin-top: 30px;">
-            <a href="http://localhost:5173/login" style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Go to Login</a>
+            <a href="https://smart-event-shivam.vercel.app/login" style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Go to Login</a>
           </div>
 
           <hr style="border: 0; border-top: 1px solid #ddd; margin-top: 40px; margin-bottom: 20px;" />
@@ -190,7 +190,7 @@ const sendCoordinatorAssignmentEmail = async (userEmail, userName, eventTitle, e
           <p style="font-size: 14px; color: #666;">Please log in to your Coordinator Dashboard to manage registrations and finalize results for this event.</p>
           
           <div style="text-align: center; margin-top: 30px;">
-            <a href="http://localhost:5173/login" style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Go to Dashboard</a>
+            <a href="https://smart-event-shivam.vercel.app/login" style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Go to Dashboard</a>
           </div>
 
           <hr style="border: 0; border-top: 1px solid #ddd; margin-top: 40px; margin-bottom: 20px;" />
