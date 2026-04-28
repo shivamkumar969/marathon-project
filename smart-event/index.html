@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SMART Event - Premium Event Management Platform</title>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script>
+      let docTitle = document.title;
+      window.addEventListener("blur", () => {
+        document.title = "Come Back! 📢";
+      });
+      window.addEventListener("focus", () => {
+        document.title = docTitle;
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
