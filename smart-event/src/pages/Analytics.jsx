@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import config from "../config";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell, LineChart, Line, PieChart, Pie, Legend, AreaChart, Area, ComposedChart, ReferenceLine } from 'recharts';
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -44,8 +45,8 @@ function Analytics() {
   const fetchData = async () => {
     try {
       const [res, predRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/analytics"),
-        axios.get("http://localhost:5000/api/analytics/predictive")
+        axios.get(`${config.API_BASE_URL}/api/analytics`),
+        axios.get(`${config.API_BASE_URL}/api/analytics/predictive`)
       ]);
       setData(res.data);
       setPredictiveData(predRes.data);
@@ -71,7 +72,7 @@ function Analytics() {
   const handleGenerateAiInsights = async () => {
     setLoadingAi(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/analytics/ai-insights");
+      const res = await axios.get(`${config.API_BASE_URL}/api/analytics/ai-insights`);
       setInsight(res.data.insight);
     } catch (err) {
       setInsight("Failed to generate insights.");

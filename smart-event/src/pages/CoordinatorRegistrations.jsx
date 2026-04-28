@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { markWinner } from "../services/winnerApi";
 import { updateEvent } from "../services/eventApi";
+import config from "../config";
 
 function CoordinatorRegistrations() {
   const [data, setData] = useState([]);
@@ -27,13 +28,13 @@ function CoordinatorRegistrations() {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/registrations");
+      const res = await axios.get(`${config.API_BASE_URL}/api/registrations`);
       const assignedRegistrations = res.data.filter(reg => 
         reg.eventId?.coordinators?.includes(user._id) || user.role === "admin"
       );
       setData(assignedRegistrations);
 
-      const winnersRes = await axios.get("http://localhost:5000/api/winners");
+      const winnersRes = await axios.get(`${config.API_BASE_URL}/api/winners`);
       setWinnersList(winnersRes.data);
     } catch (error) {
       console.error(error);
@@ -97,7 +98,7 @@ function CoordinatorRegistrations() {
     try {
       const payload = memberId ? { memberId } : {};
       const token = sessionStorage.getItem("token");
-      const res = await axios.put(`http://localhost:5000/api/registrations/${id}/attendance`, payload, {
+      const res = await axios.put(`${config.API_BASE_URL}/api/registrations/${id}/attendance`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setData(data.map(reg => reg._id === id ? { ...reg, presentMembers: res.data.presentMembers, isPresent: res.data.isPresent } : reg));

@@ -4,6 +4,7 @@ import AllEvents from "../../pages/AllEvents";
 import PaymentHistory from "../../pages/PaymentHistory";
 import Analytics from "../../pages/Analytics";
 import ParticipantProfile from "../../components/ParticipantProfile";
+import config from "../../config";
 
 function CoordinatorDashboard() {
   const location = useLocation();
@@ -77,7 +78,7 @@ function CoordinatorDashboard() {
                     <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
                     {user.profileImage ? (
                       <img 
-                        src={`http://localhost:5000${user.profileImage}`} 
+                        src={config.getImageUrl(user.profileImage)} 
                         alt="Profile" 
                         className="w-48 h-48 rounded-[2rem] object-cover border-4 border-white/10 shadow-2xl relative z-10 transform -rotate-3 hover:rotate-0 transition-all duration-500"
                       />

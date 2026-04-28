@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllUsers, deleteUser } from "../services/userApi";
 import { getEvents, updateEvent } from "../services/eventApi";
 import Toast from "../components/Toast";
+import config from "../config";
 
 function CoordinatorAllocations() {
   const [coordinators, setCoordinators] = useState([]);
@@ -119,7 +120,7 @@ function CoordinatorAllocations() {
                   <div className="w-14 h-14 shrink-0 rounded-2xl bg-gradient-to-tr from-fuchsia-600 to-indigo-600 flex items-center justify-center text-white font-black text-2xl shadow-xl shadow-fuchsia-600/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                     {coordinator.profileImage ? (
                       <img 
-                        src={`http://localhost:5000${coordinator.profileImage}`} 
+                        src={config.getImageUrl(coordinator.profileImage)} 
                         alt={coordinator.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {

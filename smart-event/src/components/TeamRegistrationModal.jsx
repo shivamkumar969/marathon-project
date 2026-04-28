@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import config from "../config";
 
 function TeamRegistrationModal({ event, isOpen, onClose, onSubmit }) {
   const [teamName, setTeamName] = useState("");
@@ -34,7 +35,7 @@ function TeamRegistrationModal({ event, isOpen, onClose, onSubmit }) {
   const getAiSuggestions = async () => {
     setLoadingAi(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/matchmaker/suggest/${user._id}/${event._id}`);
+      const res = await axios.get(`${config.API_BASE_URL}/api/matchmaker/suggest/${user._id}/${event._id}`);
       setSuggestions(res.data);
     } catch (err) {
       alert("Failed to load AI suggestions");

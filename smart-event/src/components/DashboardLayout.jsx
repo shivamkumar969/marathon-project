@@ -82,7 +82,7 @@ function DashboardLayout({ children, role }) {
           <div className="flex items-center gap-3 px-2">
             {user.profileImage ? (
               <img 
-                src={`http://localhost:5000${user.profileImage}`} 
+                src={config.getImageUrl(user.profileImage)} 
                 alt="Profile" 
                 className="w-10 h-10 rounded-xl object-cover border border-fuchsia-500/30"
               />
@@ -184,6 +184,34 @@ function DashboardLayout({ children, role }) {
                   </Link>
                 );
               })}
+            </div>
+
+            <div className="p-4 border-t border-fuchsia-900/30 space-y-4">
+              <div className="flex items-center gap-3 px-2">
+                {user.profileImage ? (
+                  <img 
+                    src={config.getImageUrl(user.profileImage)} 
+                    alt="Profile" 
+                    className="w-10 h-10 rounded-xl object-cover border border-fuchsia-500/30"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-purple-600 flex items-center justify-center text-white font-bold">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                  <p className="text-[10px] text-slate-500 truncate uppercase tracking-widest">{user.role}</p>
+                </div>
+              </div>
+              
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 w-full px-4 py-3 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all duration-200 border border-transparent hover:border-rose-500/20"
+              >
+                <span className="text-lg">🚪</span>
+                <span className="font-semibold text-sm">Logout</span>
+              </button>
             </div>
           </aside>
         </div>

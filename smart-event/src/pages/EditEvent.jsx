@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { getCoordinators } from "../services/authApi";
 import { getEvents } from "../services/eventApi";
+import config from "../config";
 
 function EditEvent() {
   const { id } = useParams();
@@ -61,7 +62,7 @@ function EditEvent() {
 
   const fetchEvent = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/events/${id}`);
+      const res = await axios.get(`${config.API_BASE_URL}/api/events/${id}`);
       const data = res.data;
       
       const formatDate = (dateStr) => {
@@ -77,7 +78,7 @@ function EditEvent() {
       if (data.registrationOpenDate) data.registrationOpenDate = formatDate(data.registrationOpenDate);
       if (data.registrationCloseDate) data.registrationCloseDate = formatDate(data.registrationCloseDate);
       
-      if (data.eventBanner) setBannerPreview(`http://localhost:5000${data.eventBanner}`);
+      if (data.eventBanner) setBannerPreview(config.getImageUrl(data.eventBanner));
       setForm({
         ...data,
         allowedInstitutes: data.allowedInstitutes || "any",
@@ -102,7 +103,7 @@ function EditEvent() {
         setAllEvents(eventsRes.data);
 
         // Fetch courses using axios since I don't have getCourses import here (but I can import it)
-        const coursesRes = await axios.get("http://localhost:5000/api/courses");
+        const coursesRes = await axios.get(`${config.API_BASE_URL}/api/courses`);
         setAvailableCourses(coursesRes.data);
       } catch (error) {
         console.error("Failed to fetch data", error);
@@ -147,7 +148,7 @@ function EditEvent() {
     formData.append("userId", user._id);
 
     try {
-      await axios.put(`http://localhost:5000/api/events/${id}`, formData);
+      await axios.put(`${config.API_BASE_URL}/api/events/${id}`, formData);
       alert("Event Updated Successfully");
       navigate(-1); // go back
     } catch (error) {

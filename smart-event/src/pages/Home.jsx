@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import config from "../config";
 
 // Helper component for counting numbers up
 const CountUp = ({ end, duration = 2000 }) => {
@@ -40,9 +41,9 @@ function Home() {
     const fetchStats = async () => {
       try {
         const [eventsRes, usersRes, regRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/events"),
-          axios.get("http://localhost:5000/api/users"),
-          axios.get("http://localhost:5000/api/registrations")
+        axios.get(`${config.API_BASE_URL}/api/events`),
+        axios.get(`${config.API_BASE_URL}/api/users`),
+        axios.get(`${config.API_BASE_URL}/api/registrations`)
         ]);
 
         const totalEvents = eventsRes.data.length;

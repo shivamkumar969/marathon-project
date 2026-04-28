@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMyRegistrations } from "../services/registrationApi";
 import { getWinners } from "../services/winnerApi";
+import config from "../config";
 
 function Certificates() {
   const user = JSON.parse(sessionStorage.getItem("user") || "{}");
@@ -86,7 +87,7 @@ function Certificates() {
                   <span className="text-slate-200 font-medium truncate pr-4">{reg.eventId?.title}</span>
                   {canDownload ? (
                     <a
-                      href={`http://localhost:5000/api/certificates/participation/${user._id}/${reg.eventId?._id}`}
+                      href={`${config.API_BASE_URL}/api/certificates/participation/${user._id}/${reg.eventId?._id}`}
                       target="_blank"
                       rel="noreferrer"
                       className="shrink-0 bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(192,38,211,0.4)] transition-all transform hover:-translate-y-0.5"
@@ -129,7 +130,7 @@ function Certificates() {
                   </div>
                   {ended ? (
                     <a
-                      href={`http://localhost:5000/api/certificates/winner/${user._id}/${win.eventId?._id}`}
+                      href={`${config.API_BASE_URL}/api/certificates/winner/${user._id}/${win.eventId?._id}`}
                       target="_blank"
                       rel="noreferrer"
                       className="shrink-0 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-amber-950 text-xs font-black py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all transform hover:-translate-y-0.5 text-center"

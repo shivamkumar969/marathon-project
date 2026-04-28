@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import Toast from "./Toast";
+import config from "../config";
 
 function ReportManagement() {
   const [loading, setLoading] = useState(false);
@@ -42,7 +43,7 @@ function ReportManagement() {
   const fetchOptions = async () => {
     try {
       const token = sessionStorage.getItem("token");
-      const res = await axios.get(`http://localhost:5000/api/reports/options`, {
+      const res = await axios.get(`${config.API_BASE_URL}/api/reports/options`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOptions(res.data);
@@ -70,7 +71,7 @@ function ReportManagement() {
         if (filters.institute) params.append("institute", filters.institute);
       }
 
-      const res = await axios.get(`http://localhost:5000/api/reports/${reportType}?${params.toString()}`, {
+      const res = await axios.get(`${config.API_BASE_URL}/api/reports/${reportType}?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPreviewData(res.data);

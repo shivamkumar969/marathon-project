@@ -27,10 +27,20 @@ function AllEvents() {
   const fetchEvents = async () => {
     try {
       const res = await getEvents();
-      // If coordinator, filter assigned events
+      const now = new Date();
+      
       if (user.role === "coordinator") {
         const assigned = res.data.filter(ev => ev.coordinators?.includes(user._id));
         setEvents(assigned);
+      } else if (user.role === "participant") {
+        // Filter events based on registration window
+        const visibleEvents = res.data.filter(ev => {
+          if (!ev.registrationOpenDate || !ev.registrationCloseDate) return true;
+          const open = new Date(ev.registrationOpenDate);
+          const close = new Date(ev.registrationCloseDate);
+          return now >= open && now <= close;
+        });
+        setEvents(visibleEvents);
       } else {
         setEvents(res.data);
       }
@@ -290,10 +300,23 @@ function AllEvents() {
             )}
             
             {/* Status Badge Over Thumbnail */}
-            <div className="absolute top-3 left-3 z-10 pointer-events-none">
+            <div className="absolute top-3 left-3 z-10 flex flex-col gap-1 pointer-events-none">
               <span className="px-3 py-1 bg-fuchsia-600/80 backdrop-blur-md text-white text-[10px] font-black rounded-lg uppercase tracking-widest shadow-lg">
                 {event.type}
               </span>
+              {user.role === "participant" && (
+                <span className={`px-2 py-1 backdrop-blur-md text-white text-[8px] font-bold rounded-md uppercase tracking-tighter shadow-lg ${
+                  !event.registrationOpenDate ? "bg-emerald-500/80" :
+                  new Date() < new Date(event.registrationOpenDate) ? "bg-amber-500/80" :
+                  new Date() > new Date(event.registrationCloseDate) ? "bg-rose-500/80" :
+                  "bg-emerald-500/80"
+                }`}>
+                  {!event.registrationOpenDate ? "Open" :
+                   new Date() < new Date(event.registrationOpenDate) ? "Upcoming" :
+                   new Date() > new Date(event.registrationCloseDate) ? "Closed" :
+                   "Active"}
+                </span>
+              )}
             </div>
             
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">

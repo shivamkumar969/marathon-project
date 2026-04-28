@@ -1,6 +1,7 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import config from "../../config";
 import AllEvents from "../../pages/AllEvents";
 import MyRegistrations from "../../pages/MyRegistrations";
 import Certificates from "../../pages/Certificates";
@@ -23,9 +24,9 @@ function ParticipantDashboard() {
     const fetchStats = async () => {
       try {
         const [regRes, certRes, eventRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/registrations/user/${user._id}`),
-          axios.get("http://localhost:5000/api/winners"),
-          axios.get("http://localhost:5000/api/events")
+          axios.get(`${config.API_BASE_URL}/api/registrations/user/${user._id}`),
+          axios.get(`${config.API_BASE_URL}/api/winners`),
+          axios.get(`${config.API_BASE_URL}/api/events`)
         ]);
 
         const userWinners = certRes.data.filter(w => w.userId?._id === user._id);
@@ -129,7 +130,7 @@ function ParticipantDashboard() {
                     <div className="absolute inset-0 bg-fuchsia-500/20 blur-2xl rounded-full animate-pulse"></div>
                     {user.profileImage ? (
                       <img 
-                        src={`http://localhost:5000${user.profileImage}`} 
+                        src={config.getImageUrl(user.profileImage)} 
                         alt="Profile" 
                         className="w-48 h-48 rounded-[2rem] object-cover border-4 border-white/10 shadow-2xl relative z-10 transform rotate-3 hover:rotate-0 transition-all duration-500"
                       />
