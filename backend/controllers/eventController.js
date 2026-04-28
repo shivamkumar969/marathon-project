@@ -11,7 +11,7 @@ const createEvent = async (req, res) => {
     const { title, date } = req.body;
     let eventData = { ...req.body };
 
-    // Parse JSON strings from FormData
+    // Parse JSON strings and Booleans from FormData
     if (typeof eventData.coordinators === 'string') {
       try {
         eventData.coordinators = JSON.parse(eventData.coordinators);
@@ -26,6 +26,12 @@ const createEvent = async (req, res) => {
         console.error("Error parsing allowedCourses:", e);
       }
     }
+
+    // Convert string booleans from FormData
+    if (eventData.isFinalized === "true") eventData.isFinalized = true;
+    if (eventData.isFinalized === "false") eventData.isFinalized = false;
+    if (eventData.resultsDeclared === "true") eventData.resultsDeclared = true;
+    if (eventData.resultsDeclared === "false") eventData.resultsDeclared = false;
 
     if (req.file) {
       try {
@@ -105,7 +111,7 @@ const updateEvent = async (req, res) => {
 
     const { userId, ...updateData } = req.body;
     
-    // Parse JSON strings from FormData
+    // Parse JSON strings and Booleans from FormData
     if (typeof updateData.coordinators === 'string') {
       try {
         updateData.coordinators = JSON.parse(updateData.coordinators);
@@ -120,6 +126,12 @@ const updateEvent = async (req, res) => {
         console.error("Error parsing allowedCourses:", e);
       }
     }
+
+    // Convert string booleans from FormData
+    if (updateData.isFinalized === "true") updateData.isFinalized = true;
+    if (updateData.isFinalized === "false") updateData.isFinalized = false;
+    if (updateData.resultsDeclared === "true") updateData.resultsDeclared = true;
+    if (updateData.resultsDeclared === "false") updateData.resultsDeclared = false;
 
     if (req.file) {
       try {

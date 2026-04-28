@@ -185,11 +185,27 @@ function AllEvents() {
     }
   };
 
-  const isRegistrationOpen = (event) => {
-    if (event.isFinalized === false) return false;
+  const getEventStatus = (event) => {
+    if (!event.isFinalized) return { label: "Coming Soon", color: "bg-slate-500/80" };
+    
     const now = new Date();
-    if (event.registrationOpenDate && now < new Date(event.registrationOpenDate)) return false;
-    if (event.registrationCloseDate && now > new Date(event.registrationCloseDate)) return false;
+    const open = event.registrationOpenDate ? new Date(event.registrationOpenDate) : null;
+    const close = event.registrationCloseDate ? new Date(event.registrationCloseDate) : null;
+
+    if (open && now < open) return { label: "Upcoming", color: "bg-amber-500/80" };
+    if (close && now > close) return { label: "Closed", color: "bg-rose-500/80" };
+    
+    return { label: "Active", color: "bg-emerald-500/80" };
+  };
+
+  const isRegistrationOpen = (event) => {
+    if (!event.isFinalized) return false;
+    const now = new Date();
+    const open = event.registrationOpenDate ? new Date(event.registrationOpenDate) : null;
+    const close = event.registrationCloseDate ? new Date(event.registrationCloseDate) : null;
+    
+    if (open && now < open) return false;
+    if (close && now > close) return false;
     return true;
   };
 
@@ -197,7 +213,6 @@ function AllEvents() {
     if (!event.genderParticipation || event.genderParticipation === "any") return true;
     return user.gender === event.genderParticipation;
   };
-
   const isInstituteAllowed = (event) => {
     if (!event.allowedInstitutes || event.allowedInstitutes === "any") return true;
     return user.instituteType === event.allowedInstitutes;
@@ -329,20 +344,10 @@ function AllEvents() {
               </span>
               {user.role === "participant" && (
                 <>
-                  <span className={`px-2 py-1 backdrop-blur-md text-white text-[8px] font-bold rounded-md uppercase tracking-tighter shadow-lg ${
-                    event.isFinalized === false ? "bg-slate-500/80" :
-                    !event.registrationOpenDate ? "bg-emerald-500/80" :
-                    new Date() < new Date(event.registrationOpenDate) ? "bg-amber-500/80" :
-                    new Date() > new Date(event.registrationCloseDate) ? "bg-rose-500/80" :
-                    "bg-emerald-500/80"
-                  }`}>
-                    {event.isFinalized === false ? "Coming Soon" :
-                     !event.registrationOpenDate ? "Open" :
-                     new Date() < new Date(event.registrationOpenDate) ? "Upcoming" :
-                     new Date() > new Date(event.registrationCloseDate) ? "Closed" :
-                     "Active"}
+                  <span className={`px-2 py-1 backdrop-blur-md text-white text-[8px] font-bold rounded-md uppercase tracking-tighter shadow-lg ${getEventStatus(event).color}`}>
+                    {getEventStatus(event).label}
                   </span>
-                  {event.isFinalized !== false && event.registrationOpenDate && new Date() < new Date(event.registrationOpenDate) && (
+                  {getEventStatus(event).label === "Upcoming" && event.registrationOpenDate && (
                     <Countdown targetDate={event.registrationOpenDate} />
                   )}
                 </>
