@@ -24,4 +24,28 @@
   .animate-fadeIn {
     animation: fadeIn 0.5s ease-out forwards;
   }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 15px rgba(192, 38, 211, 0.4); }
+    50% { box-shadow: 0 0 30px rgba(192, 38, 211, 0.7); }
+  }
+
+  .animate-glow {
+    animation: pulseGlow 2s infinite ease-in-out;
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(192, 38, 211, 0.2);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(192, 38, 211, 0.4);
+  }
 }

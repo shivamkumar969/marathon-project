@@ -32,21 +32,44 @@ function AllEvents() {
       if (user.role === "coordinator") {
         const assigned = res.data.filter(ev => ev.coordinators?.includes(user._id));
         setEvents(assigned);
-      } else if (user.role === "participant") {
-        // Filter events based on registration window
-        const visibleEvents = res.data.filter(ev => {
-          if (!ev.registrationOpenDate || !ev.registrationCloseDate) return true;
-          const open = new Date(ev.registrationOpenDate);
-          const close = new Date(ev.registrationCloseDate);
-          return now >= open && now <= close;
-        });
-        setEvents(visibleEvents);
       } else {
+        // Show all events but mark status accordingly
         setEvents(res.data);
       }
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const getTimeRemaining = (targetDate) => {
+    const total = Date.parse(targetDate) - Date.parse(new Date());
+    const days = Math.floor(total / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    return { total, days, hours, minutes };
+  };
+
+  const Countdown = ({ targetDate }) => {
+    const [timeLeft, setTimeLeft] = useState(getTimeRemaining(targetDate));
+
+    useEffect(() => {
+      const timer = setInterval(() => {
+        const remaining = getTimeRemaining(targetDate);
+        setTimeLeft(remaining);
+        if (remaining.total <= 0) clearInterval(timer);
+      }, 60000); // Update every minute
+      return () => clearInterval(timer);
+    }, [targetDate]);
+
+    if (timeLeft.total <= 0) return null;
+
+    return (
+      <div className="flex gap-2 mt-1">
+        <div className="bg-white/10 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-fuchsia-300 border border-white/5">
+          {timeLeft.days}d {timeLeft.hours}h left
+        </div>
+      </div>
+    );
   };
 
   const fetchUserRegistrations = async () => {
@@ -305,17 +328,24 @@ function AllEvents() {
                 {event.type}
               </span>
               {user.role === "participant" && (
-                <span className={`px-2 py-1 backdrop-blur-md text-white text-[8px] font-bold rounded-md uppercase tracking-tighter shadow-lg ${
-                  !event.registrationOpenDate ? "bg-emerald-500/80" :
-                  new Date() < new Date(event.registrationOpenDate) ? "bg-amber-500/80" :
-                  new Date() > new Date(event.registrationCloseDate) ? "bg-rose-500/80" :
-                  "bg-emerald-500/80"
-                }`}>
-                  {!event.registrationOpenDate ? "Open" :
-                   new Date() < new Date(event.registrationOpenDate) ? "Upcoming" :
-                   new Date() > new Date(event.registrationCloseDate) ? "Closed" :
-                   "Active"}
-                </span>
+                <>
+                  <span className={`px-2 py-1 backdrop-blur-md text-white text-[8px] font-bold rounded-md uppercase tracking-tighter shadow-lg ${
+                    event.isFinalized === false ? "bg-slate-500/80" :
+                    !event.registrationOpenDate ? "bg-emerald-500/80" :
+                    new Date() < new Date(event.registrationOpenDate) ? "bg-amber-500/80" :
+                    new Date() > new Date(event.registrationCloseDate) ? "bg-rose-500/80" :
+                    "bg-emerald-500/80"
+                  }`}>
+                    {event.isFinalized === false ? "Coming Soon" :
+                     !event.registrationOpenDate ? "Open" :
+                     new Date() < new Date(event.registrationOpenDate) ? "Upcoming" :
+                     new Date() > new Date(event.registrationCloseDate) ? "Closed" :
+                     "Active"}
+                  </span>
+                  {event.isFinalized !== false && event.registrationOpenDate && new Date() < new Date(event.registrationOpenDate) && (
+                    <Countdown targetDate={event.registrationOpenDate} />
+                  )}
+                </>
               )}
             </div>
             
@@ -370,15 +400,20 @@ function AllEvents() {
                     !isCourseAllowed(event) || 
                     registeredEventIds.has(event._id)
                   }
-                  className={`flex-1 py-2.5 px-4 text-xs rounded-xl font-black transition-all duration-300 ${
+                  className={`flex-1 py-2.5 px-4 text-[10px] rounded-xl font-black transition-all duration-300 uppercase tracking-widest ${
                     registeredEventIds.has(event._id)
                     ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
-                    : event.isFinalized !== false && isRegistrationOpen(event)
-                    ? "bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-lg shadow-fuchsia-600/20" 
-                    : "bg-white/5 border border-white/5 text-slate-600 cursor-not-allowed"
+                    : event.isFinalized === false
+                    ? "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
+                    : !isRegistrationOpen(event)
+                    ? "bg-amber-500/10 text-amber-500/50 cursor-not-allowed border border-amber-500/20"
+                    : "bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-lg shadow-fuchsia-600/20 hover:-translate-y-0.5 animate-glow"
                   }`}
                 >
-                  {registeredEventIds.has(event._id) ? "✓ REGISTERED" : "REGISTER NOW"}
+                  {registeredEventIds.has(event._id) ? "✓ Registered" : 
+                   event.isFinalized === false ? "Stay Tuned" :
+                   !isRegistrationOpen(event) ? (new Date() < new Date(event.registrationOpenDate) ? "Opening Soon" : "Closed") :
+                   "Register Now"}
                 </button>
               )}
 
